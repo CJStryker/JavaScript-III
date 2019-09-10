@@ -22,7 +22,7 @@ function GameObject(gameAttribs) {
     this.dimensions = gameAttribs.dimensions;
 };
 
-GameObject.prototype.destroy = function() {
+GameObject.prototype.destroy = function () {
     return `${this.name} was removed from the game.`;
 };
 
@@ -41,7 +41,7 @@ function CharacterStats(charAttribs) {
     GameObject.call(this, charAttribs);
 };
 
-CharacterStats.prototype.takeDamage = function() {
+CharacterStats.prototype.takeDamage = function () {
     return `${this.name} took damage.`;
 };
 
@@ -144,3 +144,90 @@ console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
   // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
+
+Villain.prototype = Object.create(Humanoid.prototype);
+
+function Villain(villainAttribs) {
+    Humanoid.call(this, villainAttribs);
+}
+
+Villain.prototype.shoot = function () {
+    if (Math.random() > 0.5) {
+        if (chris.healthPoints > 0) {
+            chris.healthPoints -= 5;
+            return `${this.name} shoots his ${this.weapons[0]} at ${chris.name} for 5 hit points!`;
+        } else if (chris.healthPoints <= 0) {
+            console.log(chris.destroy());
+            return `${this.name} has slain ${chris.name}`;
+        }
+    } else {
+        return `${this.name} shoots his ${this.weapons[0]} and misses.`;
+    }
+}
+
+Hero.prototype = Object.create(Humanoid.prototype);
+
+function Hero(heroAttribs) {
+    Humanoid.call(this, heroAttribs);
+}
+
+Hero.prototype.swing = function () {
+    if (Math.random() > 0.5) {
+        if (joe.healthPoints > 0) {
+            joe.healthPoints -= 5;
+            return `${this.name} swings his ${this.weapons[0]} at ${joe.name} for 5 hit points!`;
+        } else if (joe.healthPoints <= 0) {
+            console.log(joe.destroy());
+            return `${this.name} has slain ${joe.name}`;
+        }
+    } else {
+        return `${this.name} swings his ${this.weapons[0]} and misses.`;
+    }
+}
+
+const chris = new Hero({
+    createdAt: new Date(),
+    dimensions: {
+        length: 2,
+        width: 1,
+        height: 1,
+    },
+    healthPoints: 20,
+    name: 'Christopher',
+    team: 'The Round Table',
+    weapons: [
+        'Giant Sword',
+        'Shield',
+    ],
+    language: 'Common Tongue',
+});
+
+const joe = new Villain({
+    createdAt: new Date(),
+    dimensions: {
+        length: 2,
+        width: 1,
+        height: 1,
+    },
+    healthPoints: 15,
+    name: 'Joseph',
+    team: 'Forest Kingdom',
+    weapons: [
+        'Bow',
+        'Dagger',
+    ],
+    language: 'Elvish',
+});
+
+function battle() {
+    if (chris.healthPoints > 0) {
+        console.log(chris.swing());
+        console.log(joe.shoot());
+    } else {
+        console.log(`${chris.name} is dead and can't do anything.`)
+    }
+}
+
+for (i = 0; i < 10; i++) {
+    battle();
+} 
